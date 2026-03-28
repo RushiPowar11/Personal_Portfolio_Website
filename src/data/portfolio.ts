@@ -3,6 +3,12 @@ export type SocialLink = {
   href: string;
 };
 
+export type ResumeLink = {
+  label: string;
+  href: string;
+  downloadName: string;
+};
+
 export type ExperienceItem = {
   company: string;
   role: string;
@@ -34,7 +40,7 @@ export type ProcessStep = {
 
 export const profile = {
   name: "Rushikesh Powar",
-  headline: "Senior Fullstack Engineer · Creative Technologist",
+  headline: "GEN AI Fullstack Engineer · Creative Technologist",
   roleLine: [
     "GenAI Engineer",
     "Agentic Systems Builder",
@@ -47,7 +53,12 @@ export const profile = {
     "2+ years building production GenAI systems with FastAPI, LangChain, RAG, and multi-agent orchestration.",
   email: "rushikeshpowar90@gmail.com",
   phone: "+91-9049776924",
-  location: "Kolhapur, India",
+  location: "Pune, India",
+  resume: {
+    label: "Resume",
+    href: "https://drive.google.com/uc?export=download&id=1ENSQCAJkIDpNPXk0vJ4Xc7cYRu_8flq1",
+    downloadName: "Rushikesh-Powar-Resume.pdf",
+  } satisfies ResumeLink,
   socials: [
     {
       label: "LinkedIn",
@@ -144,17 +155,20 @@ export const skillGroups: SkillGroup[] = [
     title: "GenAI & LLM",
     skills: [
       "LangChain",
+      "LangGraph",
       "RAG Architectures",
       "Prompt Engineering",
       "LLM Chaining",
       "OpenAI APIs",
-      "Gemini",
+      "Gemini AI studio, Vertex AI,",
+      "MCP servers, Hugging Face",
     ],
   },
   {
     title: "Backend Systems",
     skills: [
       "Python",
+      "Java",
       "FastAPI",
       "Node.js",
       ".NET Core",
@@ -182,7 +196,7 @@ export const skillGroups: SkillGroup[] = [
 export const skillCounters = [
   { label: "Years Building", value: 2, suffix: "+" },
   { label: "Production Systems", value: 20, suffix: "+" },
-  { label: "AI Workflows", value: 60, suffix: "+" },
+  { label: "AI Workflows", value: 30, suffix: "+" },
   { label: "Integrated Endpoints", value: 113, suffix: "+" },
 ];
 

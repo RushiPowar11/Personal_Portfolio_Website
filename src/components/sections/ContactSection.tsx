@@ -103,6 +103,16 @@ export default function ContactSection() {
           </a>
           <p className="text-sm text-white/[72%]">{profile.phone}</p>
           <p className="text-sm text-white/[65%]">{profile.location}</p>
+          <a
+            href={profile.resume.href}
+            download={profile.resume.downloadName}
+            target="_blank"
+            rel="noreferrer"
+            data-cursor="magnetic"
+            className="inline-flex rounded-full border border-white/[20%] bg-white/[5%] px-4 py-2 text-[10px] uppercase tracking-[0.2em] text-white transition-colors hover:bg-white hover:text-black"
+          >
+            {profile.resume.label}
+          </a>
 
           <div className="pt-4">
             <p className="text-[10px] uppercase tracking-[0.22em] text-white/[55%]">Elsewhere</p>
