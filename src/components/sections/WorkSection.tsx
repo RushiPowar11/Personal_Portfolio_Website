@@ -4,13 +4,14 @@ import Link from "next/link";
 import { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import WorkEnergyScene from "@/components/three/WorkEnergyScene";
-import { featuredProjects } from "@/data/portfolio";
+import { featuredProjects, profile } from "@/data/portfolio";
 import { motionTransition } from "@/lib/motion-config";
 import { useIntersectionReveal } from "@/hooks/useIntersectionReveal";
 
 export default function WorkSection() {
   const [activeSlug, setActiveSlug] = useState<string | null>(featuredProjects[0]?.slug ?? null);
   const headingRef = useIntersectionReveal<HTMLDivElement>();
+  const githubLink = profile.socials.find((item) => item.label === "GitHub");
 
   return (
     <section id="work" className="relative overflow-hidden border-t border-white/[10%] bg-[#07070b] py-28">
@@ -108,6 +109,20 @@ export default function WorkSection() {
           );
         })}
       </div>
+
+      {githubLink ? (
+        <div className="relative z-10 mx-auto mt-10 flex max-w-7xl justify-center px-6 md:px-12">
+          <Link
+            href={githubLink.href}
+            target="_blank"
+            rel="noreferrer"
+            data-cursor="magnetic"
+            className="inline-flex items-center rounded-full border border-white/[24%] bg-white px-6 py-3 text-xs font-semibold uppercase tracking-[0.2em] text-black transition-transform duration-300 hover:scale-[1.03]"
+          >
+            More Projects
+          </Link>
+        </div>
+      ) : null}
     </section>
   );
 }
