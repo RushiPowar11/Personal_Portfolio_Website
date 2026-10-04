@@ -5,17 +5,20 @@ import { Text } from "@react-three/drei";
 import { useMemo, useRef } from "react";
 import * as THREE from "three";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
+import { useIsMobile } from "@/hooks/useIsMobile";
+import { useInView } from "@/hooks/useInView";
 
 type OrbitalWordProps = {
   text: string;
   position: [number, number, number];
+  isVisible: boolean;
 };
 
-function OrbitalWord({ text, position }: OrbitalWordProps) {
+function OrbitalWord({ text, position, isVisible }: OrbitalWordProps) {
   const labelRef = useRef<THREE.Mesh>(null);
 
   useFrame(({ camera }) => {
-    if (!labelRef.current) return;
+    if (!labelRef.current || !isVisible) return;
     labelRef.current.quaternion.copy(camera.quaternion);
   });
 
@@ -34,7 +37,7 @@ function OrbitalWord({ text, position }: OrbitalWordProps) {
   );
 }
 
-function SphereGroup({ words }: { words: string[] }) {
+function SphereGroup({ words, isVisible }: { words: string[]; isVisible: boolean }) {
   const groupRef = useRef<THREE.Group>(null);
   const reducedMotion = useReducedMotion();
 
@@ -54,7 +57,7 @@ function SphereGroup({ words }: { words: string[] }) {
   );
 
   useFrame((_, delta) => {
-    if (!groupRef.current || reducedMotion) return;
+    if (!groupRef.current || reducedMotion || !isVisible) return;
     groupRef.current.rotation.y += delta * 0.18;
     groupRef.current.rotation.x += delta * 0.06;
   });
@@ -73,20 +76,37 @@ function SphereGroup({ words }: { words: string[] }) {
         />
       </mesh>
       {words.map((word, index) => (
-        <OrbitalWord key={word} text={word} position={positions[index]} />
+        <OrbitalWord key={word} text={word} position={positions[index]} isVisible={isVisible} />
       ))}
     </group>
   );
 }
 
 export default function SkillSphereScene({ words }: { words: string[] }) {
+  const isMobile = useIsMobile();
+  const { ref, isInView } = useInView<HTMLDivElement>("200px");
+
+  if (isMobile) {
+    return (
+      <div className="pointer-events-none absolute inset-0 z-0 flex flex-wrap items-center justify-center gap-2 p-6 opacity-40">
+        {words.slice(0, 12).map((word) => (
+          <span key={word} className="rounded-full border border-white/10 bg-white/5 px-2.5 py-1 text-[10px] uppercase tracking-widest text-white/70">
+            {word}
+          </span>
+        ))}
+      </div>
+    );
+  }
+
   return (
-    <div className="pointer-events-none absolute inset-0 z-0 opacity-70">
-      <Canvas camera={{ position: [0, 0, 7], fov: 48 }} dpr={[1, 1.5]}>
-        <ambientLight intensity={0.7} />
-        <pointLight position={[4, 6, 4]} intensity={3} color="#cfd3ff" />
-        <SphereGroup words={words} />
-      </Canvas>
+    <div ref={ref} className="pointer-events-none absolute inset-0 z-0 opacity-70">
+      {isInView && (
+        <Canvas camera={{ position: [0, 0, 7], fov: 48 }} dpr={[1, 1.25]} gl={{ powerPreference: "high-performance" }}>
+          <ambientLight intensity={0.7} />
+          <pointLight position={[4, 6, 4]} intensity={3} color="#cfd3ff" />
+          <SphereGroup words={words} isVisible={isInView} />
+        </Canvas>
+      )}
     </div>
   );
 }

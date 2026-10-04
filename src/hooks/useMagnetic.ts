@@ -3,6 +3,7 @@
 import { useRef } from "react";
 import { useMotionValue, useSpring } from "framer-motion";
 import type { MouseEvent } from "react";
+import { useReducedMotion } from "@/hooks/useReducedMotion";
 
 type MagneticStrength = {
   x?: number;
@@ -10,6 +11,7 @@ type MagneticStrength = {
 };
 
 export function useMagnetic(strength: MagneticStrength = { x: 0.26, y: 0.26 }) {
+  const reducedMotion = useReducedMotion();
   const ref = useRef<HTMLElement | null>(null);
   const posX = useMotionValue(0);
   const posY = useMotionValue(0);
@@ -17,6 +19,7 @@ export function useMagnetic(strength: MagneticStrength = { x: 0.26, y: 0.26 }) {
   const y = useSpring(posY, { stiffness: 230, damping: 19, mass: 0.25 });
 
   const onMove = (event: MouseEvent<HTMLElement>) => {
+    if (reducedMotion) return;
     if (!ref.current) return;
     const rect = ref.current.getBoundingClientRect();
     const offsetX = event.clientX - rect.left - rect.width / 2;

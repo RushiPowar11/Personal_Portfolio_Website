@@ -4,6 +4,7 @@ import Link from "next/link";
 import { motion } from "framer-motion";
 import { profile } from "@/data/portfolio";
 import { motionTransition } from "@/lib/motion-config";
+import { useReducedMotion } from "@/hooks/useReducedMotion";
 
 const links = [
   { label: "About", href: "#about" },
@@ -15,11 +16,13 @@ const links = [
 ];
 
 export default function Header() {
+  const reducedMotion = useReducedMotion();
+
   return (
     <motion.header
-      initial={{ y: -36, opacity: 0 }}
+      initial={reducedMotion ? false : { y: -36, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
-      transition={motionTransition.base}
+      transition={reducedMotion ? { duration: 0 } : motionTransition.base}
       className="pointer-events-none fixed inset-x-0 top-0 z-50 flex justify-center px-4 pt-5"
     >
       <nav
@@ -29,7 +32,7 @@ export default function Header() {
         <Link
           href="#home"
           data-cursor="magnetic"
-          className="rounded-full px-4 py-2 text-[10px] font-semibold uppercase tracking-[0.18em] text-white/[90%] transition-colors hover:text-white"
+          className="rounded-full px-4 py-2 text-[10px] font-semibold uppercase tracking-[0.18em] text-white/[90%] transition-colors hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white"
         >
           {profile.name}
         </Link>
@@ -43,7 +46,7 @@ export default function Header() {
                 target="_blank"
                 rel="noreferrer"
                 data-cursor="magnetic"
-                className="rounded-full px-4 py-2 text-[10px] uppercase tracking-[0.22em] text-white/[65%] transition-all hover:bg-white/[10%] hover:text-white"
+                className="rounded-full px-4 py-2 text-[10px] uppercase tracking-[0.22em] text-white/[65%] transition-all hover:bg-white/[10%] hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white"
               >
                 {link.label}
               </a>
@@ -52,7 +55,7 @@ export default function Header() {
                 key={link.href}
                 href={link.href}
                 data-cursor="magnetic"
-                className="rounded-full px-4 py-2 text-[10px] uppercase tracking-[0.22em] text-white/[65%] transition-all hover:bg-white/[10%] hover:text-white"
+                className="rounded-full px-4 py-2 text-[10px] uppercase tracking-[0.22em] text-white/[65%] transition-all hover:bg-white/[10%] hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white"
               >
                 {link.label}
               </Link>
@@ -64,7 +67,7 @@ export default function Header() {
           target="_blank"
           rel="noreferrer"
           data-cursor="magnetic"
-          className="rounded-full border border-white/[20%] bg-white/[5%] px-4 py-2 text-[10px] uppercase tracking-[0.2em] text-white transition hover:bg-white hover:text-black"
+          className="rounded-full border border-white/[20%] bg-white/[5%] px-4 py-2 text-[10px] uppercase tracking-[0.2em] text-white transition hover:bg-white hover:text-black focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white"
         >
           LinkedIn
         </Link>

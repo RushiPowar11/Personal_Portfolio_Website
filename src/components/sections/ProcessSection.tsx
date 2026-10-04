@@ -51,7 +51,7 @@ export default function ProcessSection() {
     <section
       id="process"
       ref={sectionRef}
-      className="relative overflow-hidden border-t border-white/[10%] bg-[#06070d] py-28"
+      className="cv-auto relative overflow-hidden border-t border-white/[10%] bg-[#06070d] py-28"
     >
       <div className="mx-auto max-w-7xl px-6 md:px-12">
         <p className="text-[10px] uppercase tracking-[0.24em] text-white/[55%]">Process</p>

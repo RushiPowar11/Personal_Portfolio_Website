@@ -4,6 +4,8 @@ import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import { useMemo, useRef } from "react";
 import * as THREE from "three";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
+import { useIsMobile } from "@/hooks/useIsMobile";
+import { useInView } from "@/hooks/useInView";
 
 const vertexShader = `
 varying vec2 vUv;
@@ -53,7 +55,7 @@ void main() {
 }
 `;
 
-function ShaderPlane() {
+function ShaderPlane({ isVisible }: { isVisible: boolean }) {
   const materialRef = useRef<THREE.ShaderMaterial | null>(null);
   const reducedMotion = useReducedMotion();
   const { mouse } = useThree();
@@ -68,13 +70,14 @@ function ShaderPlane() {
   );
 
   useFrame((state, delta) => {
-    if (!materialRef.current) return;
+    if (!materialRef.current || !isVisible) return;
+    materialRef.current.uniforms.uReduce.value = reducedMotion ? 1 : 0;
+    if (reducedMotion) return;
     materialRef.current.uniforms.uTime.value += delta;
     materialRef.current.uniforms.uMouse.value.lerp(
       new THREE.Vector2(mouse.x, mouse.y),
       0.09,
     );
-    materialRef.current.uniforms.uReduce.value = reducedMotion ? 1 : 0;
   });
 
   return (
@@ -91,11 +94,23 @@ function ShaderPlane() {
 }
 
 export default function HeroShaderScene() {
+  const isMobile = useIsMobile();
+  const { ref, isInView } = useInView<HTMLDivElement>("200px");
+
+  // On mobile devices, render a lightweight CSS radial gradient instead of WebGL canvas
+  if (isMobile) {
+    return (
+      <div className="pointer-events-none absolute inset-0 z-0 bg-[radial-gradient(ellipse_at_top,rgba(68,76,95,0.35),transparent_70%)] opacity-90" />
+    );
+  }
+
   return (
-    <div className="pointer-events-none absolute inset-0 z-0 opacity-95">
-      <Canvas camera={{ position: [0, 0, 1.2], fov: 55 }} dpr={[1, 1.6]}>
-        <ShaderPlane />
-      </Canvas>
+    <div ref={ref} className="pointer-events-none absolute inset-0 z-0 opacity-95">
+      {isInView && (
+        <Canvas camera={{ position: [0, 0, 1.2], fov: 55 }} dpr={[1, 1.25]} gl={{ powerPreference: "high-performance" }}>
+          <ShaderPlane isVisible={isInView} />
+        </Canvas>
+      )}
     </div>
   );
 }

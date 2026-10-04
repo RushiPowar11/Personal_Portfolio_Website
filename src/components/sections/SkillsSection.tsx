@@ -1,10 +1,14 @@
 "use client";
 
+import dynamic from "next/dynamic";
 import { useEffect, useMemo, useRef } from "react";
-import SkillSphereScene from "@/components/three/SkillSphereScene";
 import { skillCounters, skillGroups } from "@/data/portfolio";
 import { ensureGsapPlugins, gsap } from "@/lib/gsap";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
+
+const SkillSphereScene = dynamic(() => import("@/components/three/SkillSphereScene"), {
+  ssr: false,
+});
 
 export default function SkillsSection() {
   const sectionRef = useRef<HTMLElement | null>(null);
@@ -44,7 +48,7 @@ export default function SkillsSection() {
     <section
       ref={sectionRef}
       id="skills"
-      className="relative overflow-hidden border-t border-white/[10%] bg-neutral-950 py-28"
+      className="cv-auto relative overflow-hidden border-t border-white/[10%] bg-neutral-950 py-28"
     >
       <div className="mx-auto max-w-7xl px-6 md:px-12">
         <p className="text-[10px] uppercase tracking-[0.24em] text-white/[55%]">Skills</p>

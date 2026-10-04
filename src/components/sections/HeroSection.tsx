@@ -1,13 +1,17 @@
 "use client";
 
+import dynamic from "next/dynamic";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import { profile } from "@/data/portfolio";
 import { ensureGsapPlugins, gsap, SplitText } from "@/lib/gsap";
 import { motionTransition, revealUp, staggerParent } from "@/lib/motion-config";
-import HeroShaderScene from "@/components/three/HeroShaderScene";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
+
+const HeroShaderScene = dynamic(() => import("@/components/three/HeroShaderScene"), {
+  ssr: false,
+});
 
 export default function HeroSection() {
   const reducedMotion = useReducedMotion();
@@ -17,11 +21,12 @@ export default function HeroSection() {
   const [roleIndex, setRoleIndex] = useState(0);
 
   useEffect(() => {
+    if (reducedMotion) return;
     const ticker = window.setInterval(() => {
       setRoleIndex((value) => (value + 1) % profile.roleLine.length);
     }, 2100);
     return () => window.clearInterval(ticker);
-  }, []);
+  }, [reducedMotion]);
 
   useEffect(() => {
     if (!headingRef.current || !descriptorRef.current || reducedMotion) return;
@@ -75,11 +80,11 @@ export default function HeroSection() {
 
           <h1
             ref={headingRef}
-            className="font-display text-[15vw] uppercase leading-[0.84] tracking-[-0.03em] text-white md:text-[9.6vw] lg:text-[8vw]"
+            className="font-display text-[12vw] uppercase leading-[0.88] tracking-[-0.03em] text-white sm:text-[10vw] md:text-[7.5vw] lg:text-[6.5vw] xl:text-[5.5rem] select-none"
           >
-            Rushikesh
+            <span className="inline-block whitespace-nowrap">Rushikesh</span>
             <br />
-            Powar
+            <span className="inline-block whitespace-nowrap">Powar</span>
           </h1>
 
           <p
@@ -91,7 +96,7 @@ export default function HeroSection() {
 
           <motion.div
             variants={staggerParent}
-            initial="hidden"
+            initial={reducedMotion ? false : "hidden"}
             animate="show"
             className="flex flex-wrap items-center gap-4"
           >
@@ -99,7 +104,7 @@ export default function HeroSection() {
               <Link
                 href="#work"
                 data-cursor="magnetic"
-                className="inline-flex items-center gap-3 rounded-full border border-white/[30%] bg-white px-6 py-3 text-xs font-semibold uppercase tracking-[0.2em] text-black transition-transform duration-300 hover:scale-[1.03]"
+                className="inline-flex items-center gap-3 rounded-full border border-white/[30%] bg-white px-6 py-3 text-xs font-semibold uppercase tracking-[0.2em] text-black transition-transform duration-300 hover:scale-[1.03] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white"
               >
                 Selected Work
                 <svg viewBox="0 0 64 64" className="h-4 w-4" aria-hidden>
@@ -122,7 +127,7 @@ export default function HeroSection() {
               <Link
                 href="#contact"
                 data-cursor="magnetic"
-                className="inline-flex items-center gap-3 rounded-full border border-white/[30%] bg-transparent px-6 py-3 text-xs uppercase tracking-[0.2em] text-white/[90%] transition-colors hover:bg-white/[10%]"
+                className="inline-flex items-center gap-3 rounded-full border border-white/[30%] bg-transparent px-6 py-3 text-xs uppercase tracking-[0.2em] text-white/[90%] transition-colors hover:bg-white/[10%] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white"
               >
                 Start a conversation
               </Link>
@@ -131,13 +136,21 @@ export default function HeroSection() {
         </div>
 
         <motion.aside
-          initial={{ opacity: 0, y: 24 }}
+          initial={reducedMotion ? false : { opacity: 0, y: 24 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={motionTransition.slow}
+          transition={reducedMotion ? { duration: 0 } : motionTransition.slow}
           className="pointer-events-auto self-end justify-self-end"
         >
           <div className="w-full max-w-sm rounded-3xl border border-white/[15%] bg-black/[35%] p-7 backdrop-blur-2xl">
-            <p className="text-[10px] uppercase tracking-[0.24em] text-white/[60%]">Currently focused on</p>
+            <div className="mb-7 flex items-center gap-4">
+              <div className="relative flex h-16 w-16 shrink-0 items-center justify-center rounded-full border border-white/20 bg-gradient-to-br from-white/15 to-white/5 text-2xl font-bold uppercase text-white shadow-inner backdrop-blur-xl">
+                R
+              </div>
+              <div>
+                <p className="text-[10px] uppercase tracking-[0.24em] text-white/[60%]">Currently focused on</p>
+                <p className="mt-2 text-sm font-medium text-white">{profile.headline}</p>
+              </div>
+            </div>
             <p className="mt-3 text-2xl font-semibold tracking-tight text-white">
               {profile.roleLine[roleIndex]}
             </p>
@@ -145,7 +158,11 @@ export default function HeroSection() {
             <div className="mt-8 grid grid-cols-2 gap-4 text-[11px] uppercase tracking-[0.16em] text-white/[70%]">
               <div>
                 <span className="block text-white/[45%]">Email</span>
-                <a href={`mailto:${profile.email}`} data-cursor="magnetic" className="mt-2 block break-all text-white">
+                <a
+                  href={`mailto:${profile.email}`}
+                  data-cursor="magnetic"
+                  className="mt-2 block break-all text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white"
+                >
                   {profile.email}
                 </a>
               </div>

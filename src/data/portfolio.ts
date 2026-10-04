@@ -1,4 +1,4 @@
-export type SocialLink = {
+﻿export type SocialLink = {
   label: string;
   href: string;
 };
@@ -7,6 +7,12 @@ export type ResumeLink = {
   label: string;
   href: string;
   downloadName: string;
+};
+
+export type ProfilePhoto = {
+  src: string;
+  alt: string;
+  blurDataURL: string;
 };
 
 export type ExperienceItem = {
@@ -40,7 +46,7 @@ export type ProcessStep = {
 
 export const profile = {
   name: "Rushikesh Powar",
-  headline: "GEN AI Fullstack Engineer · Creative Technologist",
+  headline: "GenAI Engineer · Creative Technologist",
   roleLine: [
     "GenAI Engineer",
     "Agentic Systems Builder",
@@ -56,9 +62,15 @@ export const profile = {
   location: "Pune, India",
   resume: {
     label: "Resume",
-    href: "https://drive.google.com/uc?export=download&id=1ENSQCAJkIDpNPXk0vJ4Xc7cYRu_8flq1",
+    href: "/resume",
     downloadName: "Rushikesh-Powar-Resume.pdf",
   } satisfies ResumeLink,
+  photo: {
+    src: "/rushikesh-powar-headshot.jpg",
+    alt: "Rushikesh Powar headshot",
+    blurDataURL:
+      "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZyI+PGZpbHRlciBpZD0iYSI+PGZlR2F1c3NpYW5CbHVyIHN0ZERldmlhdGlvbj0iMyIvPjwvZmlsdGVyPjxyZWN0IHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgZmlsbD0iIzA1MDYwYiIvPjxjaXJjbGUgY3g9IjEyIiBjeT0iMTAiIHI9IjUiIGZpbGw9IiMzYjQwNTIiIGZpbHRlcj0idXJsKCNhKSIvPjxwYXRoIGQ9Ik0zIDI0YzEtNyA2LTEwIDktMTBzOCAzIDkgMTB6IiBmaWxsPSIjMWExZjM4IiBmaWx0ZXI9InVybCgjYSkiLz48L3N2Zz4=",
+  } satisfies ProfilePhoto,
   socials: [
     {
       label: "LinkedIn",
@@ -81,15 +93,7 @@ export const experiences: ExperienceItem[] = [
       "Engineered ServiceRank: FastAPI + MongoDB intelligence platform aggregating 8+ sources, reducing manual collection by 95%.",
       "Orchestrated async scraping across 113+ endpoints via Apify and Crawl4AI, processing 1,000+ reviews per business.",
       "Built Gemini-powered scoring pipeline to normalize unstructured review data into 0-100 sentiment and risk flags.",
-      "Deployed Streamlit profiles generated in under 10 minutes with automated deduplication and analysis.",
-    ],
-  },
-  {
-    company: "Thunder Marketing Corp",
-    role: "Software Engineer",
-    location: "United States · Remote",
-    period: "Sep 2025 - Present",
-    highlights: [
+      "Generated Streamlit business profiles in under 10 minutes with automated deduplication and analysis.",
       "Built a multi-tenant CMS powering 14+ sports sites, cutting manual content creation by 80%.",
       "Designed MongoDB-backed recovery workflows with 99% reliability across 60+ complex data models.",
       "Integrated OpenAI + Gemini pipelines processing thousands of RSS feeds for automated article generation.",

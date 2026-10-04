@@ -8,6 +8,7 @@ export default function MagneticCursor() {
   const reducedMotion = useReducedMotion();
   const [enabled, setEnabled] = useState(false);
   const [active, setActive] = useState(false);
+  const [hasMoved, setHasMoved] = useState(false);
 
   const x = useMotionValue(-120);
   const y = useMotionValue(-120);
@@ -16,32 +17,46 @@ export default function MagneticCursor() {
 
   useEffect(() => {
     if (reducedMotion) return;
-    if (!window.matchMedia("(pointer:fine)").matches) return;
+    if (typeof window === "undefined" || !window.matchMedia("(pointer:fine)").matches) return;
 
     setEnabled(true);
 
+    let rafId = 0;
+    let mouseX = -120;
+    let mouseY = -120;
+
     const move = (event: MouseEvent) => {
-      x.set(event.clientX);
-      y.set(event.clientY);
+      mouseX = event.clientX;
+      mouseY = event.clientY;
+      if (!hasMoved) setHasMoved(true);
+
+      if (!rafId) {
+        rafId = window.requestAnimationFrame(() => {
+          x.set(mouseX);
+          y.set(mouseY);
+          rafId = 0;
+        });
+      }
     };
 
     const hover = (event: MouseEvent) => {
       const target = event.target as HTMLElement | null;
       const match = target?.closest(
-        "a,button,[role='button'],input,textarea,[data-cursor='magnetic']",
+        "a,button,[role='button'],input,textarea,[data-cursor='magnetic']"
       );
       setActive(Boolean(match));
     };
 
-    window.addEventListener("mousemove", move);
-    window.addEventListener("mouseover", hover);
+    window.addEventListener("mousemove", move, { passive: true });
+    window.addEventListener("mouseover", hover, { passive: true });
     return () => {
+      if (rafId) window.cancelAnimationFrame(rafId);
       window.removeEventListener("mousemove", move);
       window.removeEventListener("mouseover", hover);
     };
-  }, [reducedMotion, x, y]);
+  }, [reducedMotion, x, y, hasMoved]);
 
-  if (!enabled) return null;
+  if (!enabled || !hasMoved) return null;
 
   return (
     <>
@@ -68,4 +83,3 @@ export default function MagneticCursor() {
     </>
   );
 }
-
